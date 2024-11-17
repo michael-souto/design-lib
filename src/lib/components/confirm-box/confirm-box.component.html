@@ -1,0 +1,7 @@
+<d-modal-box [(display)]="display" [header]="header">
+    <h3 style="padding: 1em;">{{text}}</h3>
+    <div footer style="text-align: right;">
+        <d-button (onClick)="rejectEvent()" label="Não"></d-button>
+        <d-button (onClick)="acceptEvent()" style="margin-left: 10px;" label="Sim"></d-button>
+    </div>
+</d-modal-box>

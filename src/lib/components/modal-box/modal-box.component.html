@@ -1,0 +1,16 @@
+<div id="myModal" class="modal" [style.display]="getDisplay()">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close" [style.color]="textColor" (click)="hide()">&times;</span>
+        <div class="modal-header" [style.background-color]="color" [style.color]="textColor" *ngIf="header">
+            <h2 class="m-0">{{header}}</h2>
+        </div>
+        <div class="modal-body">
+            <ng-content>
+            </ng-content>
+        </div>
+        <div class="modal-footer" [style.background-color]="color" [style.color]="textColor">
+            <ng-content select="[footer]"></ng-content>
+        </div>
+    </div>
+</div>

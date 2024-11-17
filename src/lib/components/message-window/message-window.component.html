@@ -1,0 +1,12 @@
+<d-modal-box [(display)]="displayDialogMessages" [header]="header">
+  <div *ngFor="let m of messages" style="display: block; padding: 0.5em;"
+    class="ui-messages ui-widget ui-corner-all ng-star-inserted ui-messages-{{m.type}}">
+    <label style="font-weight: bold;" class="control-label"><i class="fa fa-info-circle"></i>
+      {{ m.description }}</label>
+    <br>
+  </div>
+
+  <div footer>
+    <d-button (onClick)="closeDialog()" label="Fechar"></d-button>
+  </div>
+</d-modal-box>

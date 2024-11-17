@@ -1,0 +1,36 @@
+.d-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.d-inline {
+    display: inline;
+}
+
+.d-fx-column {
+    flex-direction: column;
+}
+
+.d-jc-between {
+    justify-content: space-between;
+}
+
+.d-jc-center {
+    justify-content: center;
+}
+
+.d-jc-right {
+    justify-content: right;
+}
+
+.d-jc-space-between {
+    justify-content: space-between;
+}
+
+.d-ai-center {
+    align-items: center;
+}
+
+.d-fd-column {
+    flex-direction: column;
+}
