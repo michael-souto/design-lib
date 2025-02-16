@@ -29,6 +29,20 @@ export abstract class CrudApiService<T> {
     }
   }
 
+  createList(entities: Array<T>, masterId: string = null) {
+    if (masterId == null) {
+      return this.utilsService.http.post<ResponseNotification<T>>(
+        `${this.getAdressAPI()}/list`,
+        entities
+      );
+    } else {
+      return this.utilsService.http.post<ResponseNotification<T>>(
+        `${this.getAdressAPIReplaced(masterId)}/list`,
+        entities
+      );
+    }
+  }
+
   update(entity: T, masterId: string = null) {
     if (masterId == null) {
       return this.utilsService.http.put<ResponseNotification<T>>(
@@ -39,6 +53,20 @@ export abstract class CrudApiService<T> {
       return this.utilsService.http.put<ResponseNotification<T>>(
         `${this.getAdressAPIReplaced(masterId)}/${entity['id']}`,
         entity
+      );
+    }
+  }
+
+  updateList(entities: Array<T>, masterId: string = null) {
+    if (masterId == null) {
+      return this.utilsService.http.put<ResponseNotification<T>>(
+        `${this.getAdressAPI()}/list`,
+        entities
+      );
+    } else {
+      return this.utilsService.http.put<ResponseNotification<T>>(
+        `${this.getAdressAPIReplaced(masterId)}/list`,
+        entities
       );
     }
   }
@@ -107,6 +135,20 @@ export abstract class CrudApiService<T> {
       return this.utilsService.http.patch<ResponseNotification<T>>(
         `${this.getAdressAPIReplaced(masterId)}/${id}`,
         entity
+      );
+    }
+  }
+
+  patchList(entities: Array<any>, masterId: string = null) {
+    if (masterId == null) {
+      return this.utilsService.http.patch<ResponseNotification<T>>(
+        `${this.getAdressAPI()}/list`,
+        entities
+      );
+    } else {
+      return this.utilsService.http.patch<ResponseNotification<T>>(
+        `${this.getAdressAPIReplaced(masterId)}/list`,
+        entities
       );
     }
   }

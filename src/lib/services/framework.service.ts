@@ -12,4 +12,7 @@ export class FrameworkService {
     public router: Router,
     public utils: UtilsService
   ) {}
+
+  defaultsPipeDateFormat = 'dd/MM/yyyy'
+  defaultsComponentDateFormat = 'dd/mm/yy'
 }

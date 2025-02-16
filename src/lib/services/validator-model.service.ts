@@ -1,13 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { UtilsService } from 'projects/design-lib/src/lib/services/utils/utils.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export abstract class ValidatorModelService<T> {
+export abstract class ValidatorModelService<T> implements OnInit {
 
   constructor(protected utilsService: UtilsService) {
-    this.loadTextMessages();
+  }
+
+  async ngOnInit() {
+    await this.loadTextMessages();
   }
 
   protected abstract _fields;
@@ -35,7 +38,7 @@ export abstract class ValidatorModelService<T> {
 
   protected abstract validate();
   protected abstract validateForDelete();
-  protected abstract loadTextMessages();
+  public abstract loadTextMessages();
 }
 export class FieldValidator {
   isValid: boolean;

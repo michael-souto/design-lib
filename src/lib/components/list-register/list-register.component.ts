@@ -13,13 +13,8 @@ export abstract class ListRegisterComponent<T> {
   constructor(
     protected service: CrudApiService<T>,
     protected controller: ControllerService<T>,
-    public framework: FrameworkService,
-    private entityConstructor: new () => T
+    public framework: FrameworkService
   ) { }
-
-  createEntity(): T {
-    return new this.entityConstructor();
-  }
 
   edit(object: any) {
     this.service.findById(object.id).subscribe({
@@ -37,7 +32,7 @@ export abstract class ListRegisterComponent<T> {
 
   new() {
     this.controller.id = null;
-    this.controller.object = this.createEntity();
+    this.controller.object = this.controller.createObject();
     this.afterNewCreateEntity(this.controller.object);
     this.framework.router.navigate(['/' + this.getRouterLink() + '/create']);
   }

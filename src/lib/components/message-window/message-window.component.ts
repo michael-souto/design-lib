@@ -32,11 +32,17 @@ export class MessageWindowComponent implements OnInit {
     this.displayDialogMessages = true;
   }
 
-  showTitle(messages: Message[], urlRouteExit: string, title: string) {
+  showTitle(messages: Message[], urlRouteExit: string, title: string): void;
+  showTitle(messages: Message[], urlRouteExit: string, title: string, closeFunction: () => void): void;
+
+  showTitle(messages: Message[], urlRouteExit: string, title: string, closeFunction?: () => void): void {
     this.messages = messages;
     this.header = title ?? 'Mensagens';
     this.urlRouteExit = urlRouteExit;
     this.displayDialogMessages = true;
+    if (closeFunction) {
+      closeFunction();
+    }
   }
 
   closeDialog(){
