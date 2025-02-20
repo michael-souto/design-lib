@@ -62,14 +62,6 @@ export abstract class RegisterComponent<T extends GenericEntity>
       }
     );
     const id = this.activateRoute.snapshot.params[this.nameParamId];
-    console.log(this.activateRoute.snapshot.queryParams); // Veja se "load" aparece
-    console.log(this.activateRoute.snapshot.queryParams["load"]); // Tente acessar diretamente
-
-    this.activateRoute.queryParams.subscribe((params) => {
-      const load = params["load"];
-      console.log(load);
-    });
-
     this.beforeInitRegister();
     if (FunctionsService.isEmpty(id)) {
       if (this.activateRoute.snapshot.queryParams["new"] == 'true') {
@@ -95,8 +87,6 @@ export abstract class RegisterComponent<T extends GenericEntity>
         queryParamsHandling: "merge",
         replaceUrl: true,
       });
-      this.currentUrl = this.currentUrl.replace("?load=true", null);
-
       this.service.findById(id).subscribe({
         next: (response: T) => {
           this.initializeEntity(response);
@@ -105,6 +95,13 @@ export abstract class RegisterComponent<T extends GenericEntity>
           this.initializeEntity(this.controller.createObject());
         },
       });
+    } else {
+      this.framework.router.navigate([], {
+        queryParams: { load: null },
+        queryParamsHandling: "merge",
+        replaceUrl: true,
+      });
+      this.currentUrl = this.currentUrl.replace("?load=false", '');
     }
   }
 
