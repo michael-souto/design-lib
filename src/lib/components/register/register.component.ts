@@ -48,36 +48,64 @@ export abstract class RegisterComponent<T extends GenericEntity>
 
   @Output() onSaveEntity = new EventEmitter<any>();
 
-  @ViewChild("messageWindow", { static: true }) messageWindow: MessageWindowComponent;
+  @ViewChild("messageWindow", { static: true })
+  messageWindow: MessageWindowComponent;
   @ViewChild("confirmBox", { static: true }) confirmBox: ConfirmBoxComponent;
 
   ngOnInit() {
     this.currentUrl = this.framework.router.url;
-
-    this.routerSubscription = this.framework.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        this.nextUrl = event.url;
+    this.routerSubscription = this.framework.router.events.subscribe(
+      (event) => {
+        if (event instanceof NavigationStart) {
+          this.nextUrl = event.url;
+        }
       }
+    );
+    const id = this.activateRoute.snapshot.params[this.nameParamId];
+    console.log(this.activateRoute.snapshot.queryParams); // Veja se "load" aparece
+    console.log(this.activateRoute.snapshot.queryParams["load"]); // Tente acessar diretamente
+
+    this.activateRoute.queryParams.subscribe((params) => {
+      const load = params["load"];
+      console.log(load);
     });
 
-    const id = this.activateRoute.snapshot.params[this.nameParamId];
     this.beforeInitRegister();
     if (FunctionsService.isEmpty(id)) {
-      return this.initializeEntity(
-        this.controller.object ?? this.controller.createObject()
-      );
+      if (this.activateRoute.snapshot.queryParams["new"] == 'true') {
+        this.framework.router.navigate([], {
+          queryParams: { new: null },
+          queryParamsHandling: "merge",
+          replaceUrl: true,
+        });
+        this.currentUrl = this.currentUrl.replace("?new=true", '');
+        return this.initializeEntity(this.controller.createObject());
+      } else {
+        this.initializeEntity(
+          this.controller.object ?? this.controller.createObject()
+        );
+      }
     }
     if (this.controller.object) {
       return this.initializeEntity(this.controller.object);
     }
-    this.service.findById(id).subscribe({
-      next: (response: T) => {
-        this.initializeEntity(response);
-      },
-      error: () => {
-        this.initializeEntity(this.controller.createObject());
-      },
-    });
+    if (this.activateRoute.snapshot.queryParams["load"] != 'false') {
+      this.framework.router.navigate([], {
+        queryParams: { load: null },
+        queryParamsHandling: "merge",
+        replaceUrl: true,
+      });
+      this.currentUrl = this.currentUrl.replace("?load=true", null);
+
+      this.service.findById(id).subscribe({
+        next: (response: T) => {
+          this.initializeEntity(response);
+        },
+        error: () => {
+          this.initializeEntity(this.controller.createObject());
+        },
+      });
+    }
   }
 
   ngOnDestroy() {
@@ -99,8 +127,8 @@ export abstract class RegisterComponent<T extends GenericEntity>
       this.controller.setInitialObjectState(entity);
     }
     this.initialObjectState = this.controller.getInitialObjectState();
-      this.afterInitRegister(entity.id);
-    }
+    this.afterInitRegister(entity.id);
+  }
 
   protected hasUnsavedChanges(): boolean {
     return JSON.stringify(this.controller.object) !== this.initialObjectState;
@@ -162,7 +190,8 @@ export abstract class RegisterComponent<T extends GenericEntity>
             if (!FunctionsService.hasErrors(this.messages)) {
               if (!this.isAdvancedMode()) {
                 this.controller.setInitialObjectState(this.controller.object);
-                this.initialObjectState = this.controller.getInitialObjectState();
+                this.initialObjectState =
+                  this.controller.getInitialObjectState();
                 this.showMessage("/" + this.getRouterLink(), response.title);
               }
               this.afterSaveSucess(response);
@@ -184,7 +213,8 @@ export abstract class RegisterComponent<T extends GenericEntity>
             if (!FunctionsService.hasErrors(this.messages)) {
               if (!this.isAdvancedMode()) {
                 this.controller.setInitialObjectState(this.controller.object);
-                this.initialObjectState = this.controller.getInitialObjectState();
+                this.initialObjectState =
+                  this.controller.getInitialObjectState();
                 this.showMessage("/" + this.getRouterLink(), response.title);
               }
               this.afterSaveSucess(response);
@@ -260,4 +290,3 @@ export abstract class RegisterComponent<T extends GenericEntity>
     this.controller.object = entity;
   }
 }
-
