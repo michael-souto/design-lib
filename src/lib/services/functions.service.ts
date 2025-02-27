@@ -1,7 +1,7 @@
 import { MessageType } from './../models/message-type.model';
 import { Message } from './../models/message.model';
 import { HostListener, Directive } from '@angular/core';
-
+import { UtilsService } from './utils/utils.service';
 
 @Directive()
 export class FunctionsService {
@@ -29,7 +29,32 @@ export class FunctionsService {
     }
   }
 
+  public static atribbuirNullEmIdsString(ids: string[], list: any[]) {
+    for (let i = 0; i < ids?.length; i++) {
+      const newId = ids[i];
+      for (let j = 0; j < list?.length; j++) {
+        const entity = list[j];
+        if (entity.id != null && entity.id == newId) {
+          entity.id = null;
+        }
+      }
+    }
+  }
+
   public static recarregarIds(ids: number[], list: any[]) {
+    for (let index = 0; index < ids?.length; index++) {
+      const elementId = ids[index];
+      for (let j = 0; j < list?.length; j++) {
+        const entity = list[j];
+        if (entity.id == null) {
+          entity.id = elementId;
+          break;
+        }
+      }
+    }
+  }
+
+  public static recarregarIdsString(ids: string[], list: any[]) {
     for (let index = 0; index < ids?.length; index++) {
       const elementId = ids[index];
       for (let j = 0; j < list?.length; j++) {
@@ -65,13 +90,40 @@ export class FunctionsService {
     list?.push(entityEdit);
   }
 
+  public static addItemListGridString(entityEdit: any, list: any[], newsIds: string[]) {
+    if (entityEdit?.id == null) {
+      let newId: string = UtilsService.generateUUID();
+      entityEdit.id = newId;
+      newsIds?.push(newId);
+    } else {
+      for (let i = 0; i < list?.length; i++) {
+        if (list[i].id == entityEdit?.id) {
+          list?.splice(i, 1);
+        }
+      }
+    }
+    list?.push(entityEdit);
+  }
+
   public static removeItemListGrid(entityEdit: any, list: any[], newsIds: number[]) {
     for (let i = 0; i < newsIds?.length; i++) {
       if (newsIds[i] == entityEdit?.id) {
         newsIds?.splice(i, 1);
       }
     }
+    for (let i = 0; i < list?.length; i++) {
+      if (list[i].id == entityEdit?.id) {
+        list?.splice(i, 1);
+      }
+    }
+  }
 
+  public static removeItemListGridString(entityEdit: any, list: any[], newsIds: string[]) {
+    for (let i = 0; i < newsIds?.length; i++) {
+      if (newsIds[i] == entityEdit?.id) {
+        newsIds?.splice(i, 1);
+      }
+    }
     for (let i = 0; i < list?.length; i++) {
       if (list[i].id == entityEdit?.id) {
         list?.splice(i, 1);

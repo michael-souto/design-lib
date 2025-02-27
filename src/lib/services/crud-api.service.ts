@@ -2,12 +2,17 @@ import { Injectable, makeStateKey } from '@angular/core';
 import { UtilsService } from './utils/utils.service';
 import { ResponseNotification } from './../models/response-notification';
 import { ResponseList } from '../models/response-list';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export abstract class CrudApiService<T> {
-  constructor(protected utilsService: UtilsService) {}
+  constructor(protected utilsService: UtilsService) {
+    if (!environment.production) {
+      console.log('CrudApiService-constructor');
+    }
+  }
 
   getAdressAPI(masterId: string = null): string { return null}
 

@@ -24,6 +24,7 @@ import { ControllerService } from "../../services/controller.service";
 
 import { Observable, Subscription } from "rxjs";
 import { NavigationStart } from "@angular/router";
+import { environment } from "src/environments/environment";
 
 @Directive()
 export abstract class RegisterComponent<T extends GenericEntity>
@@ -53,6 +54,9 @@ export abstract class RegisterComponent<T extends GenericEntity>
   @ViewChild("confirmBox", { static: true }) confirmBox: ConfirmBoxComponent;
 
   ngOnInit() {
+    if (!environment.production) {
+      console.log('RegisterComponent-NgOnInit');
+    }
     this.currentUrl = this.framework.router.url;
     this.routerSubscription = this.framework.router.events.subscribe(
       (event) => {

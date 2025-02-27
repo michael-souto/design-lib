@@ -1,5 +1,6 @@
 import { Injectable, OnInit } from "@angular/core";
 import { FrameworkService } from "./framework.service";
+import { environment } from "src/environments/environment";
 
 @Injectable({
   providedIn: "root",
@@ -11,6 +12,9 @@ export class ControllerService<T> {
   listObject: T[];
 
   constructor(protected framework: FrameworkService, protected objectConstructor: new () => T) {
+    if (!environment.production) {
+      console.log('ControllerService-constructor');
+    }
   }
 
   createObject(): T {

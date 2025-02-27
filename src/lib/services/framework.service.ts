@@ -15,4 +15,5 @@ export class FrameworkService {
 
   defaultsPipeDateFormat = 'dd/MM/yyyy'
   defaultsComponentDateFormat = 'dd/mm/yy'
+  language = 'pt';
 }
