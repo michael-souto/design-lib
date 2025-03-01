@@ -13,6 +13,17 @@ export class FrameworkService {
     public utils: UtilsService
   ) {}
 
+  getLanguageMap() {
+    return new Map<string, string>([
+      ['pt', ''],
+      ['en', ''],
+      ['es', ''],
+      ['fr', ''],
+      ['de', ''],
+      ['it', ''],
+    ]);
+  }
+
   defaultsPipeDateFormat = 'dd/MM/yyyy'
   defaultsComponentDateFormat = 'dd/mm/yy'
   language = 'pt';
