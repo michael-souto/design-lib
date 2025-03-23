@@ -1,5 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { UtilsService } from 'projects/design-lib/src/lib/services/utils/utils.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,9 @@ import { UtilsService } from 'projects/design-lib/src/lib/services/utils/utils.s
 export abstract class ValidatorModelService<T> implements OnInit {
 
   constructor(protected utilsService: UtilsService) {
+    if (!environment.production) {
+      console.log('ValidatorModelService');
+    }
   }
 
   async ngOnInit() {
@@ -19,6 +23,7 @@ export abstract class ValidatorModelService<T> implements OnInit {
 
   get fields() {
     this.validate();
+    this._valid = this.areAllFieldsValid();
     return this._fields;
   }
 

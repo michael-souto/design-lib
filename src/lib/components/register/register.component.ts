@@ -121,6 +121,7 @@ export abstract class RegisterComponent<T extends GenericEntity>
   }
 
   private initializeEntity(entity: T): void {
+    this.beforeInitializeEntity(entity);
     this.controller.object = entity;
     this.validator.object = entity;
     this.validator.loadTextMessages();
@@ -136,6 +137,9 @@ export abstract class RegisterComponent<T extends GenericEntity>
   }
 
   canDeactivate(nextUrl?: string): Observable<boolean> | boolean {
+    if (!environment.production) {
+      console.log('canDeactivate', nextUrl, this.currentUrl);
+    }
     if (nextUrl && nextUrl.startsWith(this.currentUrl + "/")) {
       return true;
     }
@@ -174,6 +178,7 @@ export abstract class RegisterComponent<T extends GenericEntity>
   }
 
   beforeInitRegister() {}
+  beforeInitializeEntity(entity: T) {}
   afterInitRegister(id: any) {}
   beforeSave() {}
   afterSave() {}
@@ -190,9 +195,9 @@ export abstract class RegisterComponent<T extends GenericEntity>
             this.messages = response.messages;
             if (!FunctionsService.hasErrors(this.messages)) {
               if (!this.isAdvancedMode()) {
-                this.controller.setInitialObjectState(this.controller.object);
-                this.initialObjectState =
-                  this.controller.getInitialObjectState();
+                this.controller.object = response.data;
+                this.controller.setInitialObjectState(response.data);
+                this.initialObjectState = this.controller.getInitialObjectState();
                 this.showMessage("/" + this.getRouterLink(), response.title);
               }
               this.afterSaveSucess(response);
@@ -213,9 +218,9 @@ export abstract class RegisterComponent<T extends GenericEntity>
             this.messages = response.messages;
             if (!FunctionsService.hasErrors(this.messages)) {
               if (!this.isAdvancedMode()) {
-                this.controller.setInitialObjectState(this.controller.object);
-                this.initialObjectState =
-                  this.controller.getInitialObjectState();
+                this.controller.object = response.data;
+                this.controller.setInitialObjectState(response.data);
+                this.initialObjectState = this.controller.getInitialObjectState();
                 this.showMessage("/" + this.getRouterLink(), response.title);
               }
               this.afterSaveSucess(response);

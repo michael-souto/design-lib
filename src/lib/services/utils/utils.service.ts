@@ -154,6 +154,24 @@ export class UtilsService {
     const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     return uuidPattern.test(uuid);
   }
+
+  async getOptionsFromEnum(
+    enumObj: any,
+    translationPrefix: string
+  ): Promise<{ label: string; value: string }[]> {
+    const keys = Object.keys(enumObj).filter(key => isNaN(Number(key)));
+
+    const options = await Promise.all(
+      keys.map(async key => {
+        const translatedLabel = await this.getTextTranslated(`${translationPrefix}.${key}`);
+        return {
+          label: translatedLabel,
+          value: enumObj[key]
+        };
+      })
+    );
+    return options;
+  }
 }
 
 export const SAVED_SUCCESSFULLY = 'savedSuccessfully';
