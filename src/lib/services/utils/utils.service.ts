@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, of } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { AsyncFunctionQueueService } from '../async-function-queue.service';
 
@@ -66,6 +66,35 @@ export class UtilsService {
   async getTextTranslated(alias: string, interpolateParams?: Object) {
     const createAPI$ = this.translate.get(alias, interpolateParams);
     return lastValueFrom(createAPI$)
+  }
+
+  findTextTranslated(alias: string, interpolateParams?: Object): string {
+    const currentLang = this.translate.currentLang;
+    const translations = this.translate.translations[currentLang] || {};
+    const translationFound = this.findKeyRecursive(translations, alias);
+    let result = translationFound;
+    if (result && interpolateParams) {
+      result = this.translate.parser.interpolate(result, interpolateParams);
+    }
+    return result || alias;
+  }
+
+  private findKeyRecursive(obj: any, alias: string): any {
+    if (obj === null || typeof obj !== 'object') {
+      return null;
+    }
+    if (obj.hasOwnProperty(alias)) {
+      return obj[alias];
+    }
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key) && typeof obj[key] === 'object') {
+        const found = this.findKeyRecursive(obj[key], alias);
+        if (found !== null) {
+          return found;
+        }
+      }
+    }
+    return null;
   }
 
   setNullInNewIds(newsIds: string[], list: any[]) {
