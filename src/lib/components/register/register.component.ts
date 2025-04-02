@@ -240,7 +240,7 @@ export abstract class RegisterComponent<T extends GenericEntity>
   }
 
   getId(): string {
-    return this.activateRoute.snapshot.params["id"];
+    return this.activateRoute.snapshot.params[this.nameParamId];
   }
 
   afterDeleteSucess(responseApi: ResponseNotification<T>) {}
