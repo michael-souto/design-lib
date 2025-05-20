@@ -26,7 +26,7 @@ export class FrameworkService {
     ]);
   }
 
-  defaultsComponentDateFormat = 'dd/mm/yyyy';
+  defaultsComponentDateFormat = 'dd/mm/yy';
   defaultsPipeDateFormat = 'dd/MM/yyyy';
   defaultsPipeDateTimeFormat = 'dd/MM/yyyy HH:mm';
   language = 'pt';
