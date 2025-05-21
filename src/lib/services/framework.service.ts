@@ -30,4 +30,38 @@ export class FrameworkService {
   defaultsPipeDateFormat = 'dd/MM/yyyy';
   defaultsPipeDateTimeFormat = 'dd/MM/yyyy HH:mm';
   language = 'pt';
+
+  getFormattedDate(date: Date): string {
+    return new Intl.DateTimeFormat(this.language, {
+      month: 'short',
+      day: 'numeric'
+    }).format(date);
+  }
+
+  getDurationFromNow(date: Date): string {
+    const now = new Date();
+    const diffMs = Math.abs(now.getTime() - date.getTime());
+
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+    const mins = Math.floor((diffMs / (1000 * 60)) % 60);
+
+    const translations = {
+      en: { days: 'days', hours: 'hrs', mins: 'mins' },
+      pt: { days: 'dias', hours: 'hrs', mins: 'min' },
+      es: { days: 'días', hours: 'hrs', mins: 'min' },
+      fr: { days: 'jours', hours: 'heures', mins: 'minutes' },
+      de: { days: 'Tage', hours: 'Stunden', mins: 'Minuten' },
+      it: { days: 'giorni', hours: 'ore', mins: 'minuti' },
+    };
+
+    const t = translations[this.language];
+
+    let parts = [];
+    if (days > 0) parts.push(`${days} ${t.days}`);
+    if (hours > 0) parts.push(`${hours} ${t.hours}`);
+    if (mins > 0) parts.push(`${mins} ${t.mins}`);
+
+    return parts.join(' ');
+  }
 }
