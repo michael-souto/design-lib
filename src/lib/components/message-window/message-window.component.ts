@@ -13,6 +13,7 @@ export class MessageWindowComponent implements OnInit {
   displayDialogMessages: boolean = false;
   urlRouteExit: string = '';
   @Input() header = "Mensagem";
+  closeFunction: () => void = () => {};
 
   constructor(protected router: Router) { }
 
@@ -40,9 +41,7 @@ export class MessageWindowComponent implements OnInit {
     this.header = title ?? 'Mensagens';
     this.urlRouteExit = urlRouteExit;
     this.displayDialogMessages = true;
-    if (closeFunction) {
-      closeFunction();
-    }
+    this.closeFunction = closeFunction;
   }
 
   closeDialog(){
@@ -50,6 +49,9 @@ export class MessageWindowComponent implements OnInit {
 
     if (this.urlRouteExit != ''){
       this.router.navigate([this.urlRouteExit]);
+    }
+    if (this.closeFunction) {
+      this.closeFunction();
     }
   }
 
