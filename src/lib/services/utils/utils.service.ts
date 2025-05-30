@@ -41,16 +41,17 @@ export class UtilsService {
     this.NUMBER_OF_RECORDS = Math.round(this.SCREEN_HEIGHT / 50);
   }
 
+
   isDesktop() {
-    return window.innerWidth > 991;
+    return window.innerWidth >= 1200;
+  }
+
+  isTablet() {
+    return window.innerWidth > 768 && window.innerWidth < 1200;
   }
 
   isMobile() {
     return window.innerWidth < 768;
-  }
-
-  isTablet() {
-    return window.innerWidth > 768 && window.innerWidth < 991;
   }
 
   getArrayTags(tags?: string) {
