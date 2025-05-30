@@ -46,7 +46,11 @@ export class UtilsService {
   }
 
   isMobile() {
-      return !this.isDesktop();
+    return window.innerWidth < 768;
+  }
+
+  isTablet() {
+    return window.innerWidth > 768 && window.innerWidth < 991;
   }
 
   getArrayTags(tags?: string) {
