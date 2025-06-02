@@ -11,7 +11,7 @@ export class ButtonComponent implements OnInit {
   @Input() label: string;
   @Input() text: string;
   @Output() onClick = new EventEmitter<any>();
-
+  @Input() severity: string = 'primary';
   ngOnInit(): void {
 
   }
