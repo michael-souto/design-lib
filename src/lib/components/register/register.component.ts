@@ -162,8 +162,8 @@ export abstract class RegisterComponent<T extends GenericEntity>
     return true;
   }
 
-  showMessage(routerExit: string, title: string) {
-    this.messageWindow.showTitle(this.messages, routerExit, title);
+  showMessage(routerExit: string, title: string, closeFunction?: () => void) {
+    this.messageWindow.showTitle(this.messages, routerExit, title, closeFunction);
   }
 
   isUpdateMode(): boolean {
@@ -198,11 +198,11 @@ export abstract class RegisterComponent<T extends GenericEntity>
                 this.controller.object = response.data;
                 this.controller.setInitialObjectState(response.data);
                 this.initialObjectState = this.controller.getInitialObjectState();
-                this.showMessage("/" + this.getRouterLink(), response.title);
+                this.showMessage('', response.title, () => this.back());
               }
               this.afterSaveSucess(response);
             } else {
-              this.showMessage("", response.title);
+              this.showMessage('', response.title);
               this.afterSaveError(response);
             }
             this.afterSave();
@@ -221,11 +221,11 @@ export abstract class RegisterComponent<T extends GenericEntity>
                 this.controller.object = response.data;
                 this.controller.setInitialObjectState(response.data);
                 this.initialObjectState = this.controller.getInitialObjectState();
-                this.showMessage("/" + this.getRouterLink(), response.title);
+                this.showMessage('', response.title, () => this.back());
               }
               this.afterSaveSucess(response);
             } else {
-              this.showMessage("", response.title);
+              this.showMessage('', response.title);
               this.afterSaveError(response);
             }
             this.afterSave();
@@ -254,11 +254,11 @@ export abstract class RegisterComponent<T extends GenericEntity>
           this.messages = response.messages;
           if (!FunctionsService.hasErrors(this.messages)) {
             if (!this.isAdvancedMode()) {
-              this.showMessage("/" + this.getRouterLink(), response.title);
+              this.showMessage('', response.title, () => this.back());
             }
             this.afterDeleteSucess(response);
           } else {
-            this.showMessage("", response.title);
+            this.showMessage('', response.title);
             this.afterDeleteError(response);
           }
         },
@@ -277,6 +277,10 @@ export abstract class RegisterComponent<T extends GenericEntity>
 
   goList() {
     this.framework.router.navigate(["/" + this.getRouterLink()]);
+  }
+
+  back() {
+    this.framework.location.back();
   }
 
   confirmDelete() {
