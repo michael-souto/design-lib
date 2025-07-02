@@ -10,9 +10,11 @@ export class EventBusService {
     this.events$.next(event);
   }
 
-  on(type: string) {
+  on(types: string | string[]) {
+    const typeArray = Array.isArray(types) ? types : [types];
+
     return this.events$.asObservable().pipe(
-      filter((event) => event.type === type),
+      filter((event) => typeArray.includes(event.type)),
       map((event) => event),
     );
   }
