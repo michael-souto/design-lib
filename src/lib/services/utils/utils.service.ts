@@ -1,29 +1,29 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { HostListener } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateService } from '@ngx-translate/core';
-import { lastValueFrom, of } from 'rxjs';
-import { v4 as uuidv4 } from 'uuid';
-import { AsyncFunctionQueueService } from '../async-function-queue.service';
+import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
+import { HostListener } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { TranslateService } from "@ngx-translate/core";
+import { lastValueFrom, of } from "rxjs";
+import { v4 as uuidv4 } from "uuid";
+import { AsyncFunctionQueueService } from "../async-function-queue.service";
+import { EventBusService } from "../event-bus.service";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class UtilsService {
-
   constructor(
     public router: Router,
     public asyncFunctionQueueService: AsyncFunctionQueueService,
     public http: HttpClient,
-    protected translate: TranslateService,
-  ) {
+    protected translate: TranslateService
+    ) {
     this.loadScreenSize();
-    translate.setDefaultLang('pt');
+    translate.setDefaultLang("pt");
     if (this.translate.getBrowserLang() !== undefined) {
       this.translate.use(this.translate.getBrowserLang());
     } else {
-        this.translate.use('pt'); // Set your language here
+      this.translate.use("pt"); // Set your language here
     }
   }
 
@@ -32,15 +32,14 @@ export class UtilsService {
   SCREEN_HEIGHT?: number;
   SCREEN_WIDTH?: number;
   NUMBER_OF_RECORDS = 8;
-  COLOR_COMMENT? = '#fff72b';
+  COLOR_COMMENT? = "#fff72b";
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener("window:resize", ["$event"])
   loadScreenSize() {
     this.SCREEN_HEIGHT = window.innerHeight;
     this.SCREEN_WIDTH = window.innerWidth;
     this.NUMBER_OF_RECORDS = Math.round(this.SCREEN_HEIGHT / 50);
   }
-
 
   isDesktop() {
     return window.innerWidth >= 1200;
@@ -55,22 +54,22 @@ export class UtilsService {
   }
 
   getArrayTags(tags?: string) {
-    let array = tags?.split(';');
+    let array = tags?.split(";");
     array?.pop();
     return array;
   }
 
   removeTagsHTML(html: any) {
-    return html.replace(/<[^>]*>/g, '') ?? '';
+    return html.replace(/<[^>]*>/g, "") ?? "";
   }
 
   getDefautRouteAbove() {
-    return this.router.url.substring(0, this.router.url.lastIndexOf('/'));
+    return this.router.url.substring(0, this.router.url.lastIndexOf("/"));
   }
 
   async getTextTranslated(alias: string, interpolateParams?: Object) {
     const createAPI$ = this.translate.get(alias, interpolateParams);
-    return lastValueFrom(createAPI$)
+    return lastValueFrom(createAPI$);
   }
 
   findTextTranslated(alias: string, interpolateParams?: Object): string {
@@ -85,14 +84,14 @@ export class UtilsService {
   }
 
   private findKeyRecursive(obj: any, alias: string): any {
-    if (obj === null || typeof obj !== 'object') {
+    if (obj === null || typeof obj !== "object") {
       return null;
     }
     if (obj.hasOwnProperty(alias)) {
       return obj[alias];
     }
     for (const key in obj) {
-      if (obj.hasOwnProperty(key) && typeof obj[key] === 'object') {
+      if (obj.hasOwnProperty(key) && typeof obj[key] === "object") {
         const found = this.findKeyRecursive(obj[key], alias);
         if (found !== null) {
           return found;
@@ -164,20 +163,20 @@ export class UtilsService {
     }
   }
 
-  backMyBaseRoute(complement: string = '') {
-    if (complement != ''){
+  backMyBaseRoute(complement: string = "") {
+    if (complement != "") {
       this.router.navigate([this.getDefautRouteAbove(), complement]);
     } else {
       this.router.navigate([this.getDefautRouteAbove()]);
     }
   }
 
-  navigate(url: string){
+  navigate(url: string) {
     this.router.navigate([url]);
   }
 
   public static isEmpty(value: any): boolean {
-    return value == undefined || value == null || value.toString() == '';
+    return value == undefined || value == null || value.toString() == "";
   }
 
   static generateUUID(): string {
@@ -185,7 +184,8 @@ export class UtilsService {
   }
 
   static isValidUUID(uuid: string): boolean {
-    const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const uuidPattern =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     return uuidPattern.test(uuid);
   }
 
@@ -193,14 +193,16 @@ export class UtilsService {
     enumObj: any,
     translationPrefix: string
   ): Promise<{ label: string; value: string }[]> {
-    const keys = Object.keys(enumObj).filter(key => isNaN(Number(key)));
+    const keys = Object.keys(enumObj).filter((key) => isNaN(Number(key)));
 
     const options = await Promise.all(
-      keys.map(async key => {
-        const translatedLabel = await this.getTextTranslated(`${translationPrefix}.${key}`);
+      keys.map(async (key) => {
+        const translatedLabel = await this.getTextTranslated(
+          `${translationPrefix}.${key}`
+        );
         return {
           label: translatedLabel,
-          value: enumObj[key]
+          value: enumObj[key],
         };
       })
     );
@@ -208,31 +210,29 @@ export class UtilsService {
   }
 
   static formatLocalDateTime(date: Date): string {
-    const pad = (num: number) => num.toString().padStart(2, '0');
+    const pad = (num: number) => num.toString().padStart(2, "0");
 
     return (
       date.getFullYear() +
-      '-' +
+      "-" +
       pad(date.getMonth() + 1) +
-      '-' +
+      "-" +
       pad(date.getDate()) +
-      'T' +
+      "T" +
       pad(date.getHours()) +
-      ':' +
+      ":" +
       pad(date.getMinutes()) +
-      ':' +
+      ":" +
       pad(date.getSeconds())
     );
   }
 }
 
-export const SAVED_SUCCESSFULLY = 'savedSuccessfully';
-export const UPDATED_SUCCESSFULLY = 'updatedSuccessfully';
-export const DELETED_SUCCESSFULLY = 'deletedSuccessfully';
-export const ERROR_WHEN_SAVING = 'errorWhenSaving';
-export const ERROR_WHEN_UPDATING = 'errorWhenUpdating';
-export const ERROR_WHEN_DELETING = 'errorWhenDeleting';
-export const FIELD_MANDATORY = 'fieldMandatory';
-export const OPERATION_SUCCESSFULLY = 'operationSuccessfully';
-
-
+export const SAVED_SUCCESSFULLY = "savedSuccessfully";
+export const UPDATED_SUCCESSFULLY = "updatedSuccessfully";
+export const DELETED_SUCCESSFULLY = "deletedSuccessfully";
+export const ERROR_WHEN_SAVING = "errorWhenSaving";
+export const ERROR_WHEN_UPDATING = "errorWhenUpdating";
+export const ERROR_WHEN_DELETING = "errorWhenDeleting";
+export const FIELD_MANDATORY = "fieldMandatory";
+export const OPERATION_SUCCESSFULLY = "operationSuccessfully";

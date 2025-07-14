@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { UtilsService } from "./utils/utils.service";
 import { EventBusService } from "./event-bus.service";
+import { MessageType } from "../models/message-type.model";
 
 @Injectable({
   providedIn: "root"
@@ -24,6 +25,20 @@ export class FrameworkService {
       ['de', ''],
       ['it', ''],
     ]);
+  }
+
+  copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text);
+    this.eventBusService.emit({
+      type: "show-messages-toast",
+      payload: [
+        {
+          code: "success",
+          type: MessageType.Success,
+          description: this.utils.findTextTranslated("COPIED_TO_CLIPBOARD"),
+        },
+      ],
+    });
   }
 
   defaultsComponentDateFormat = 'dd/mm/yy';

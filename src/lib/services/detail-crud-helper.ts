@@ -1,6 +1,7 @@
+import { Location } from "@angular/common";
 import { ActivatedRoute, Router } from "@angular/router";
-import { FrameworkService } from "projects/design-lib/src/lib/services/framework.service";
 import { FunctionsService } from "projects/design-lib/src/lib/services/functions.service";
+import { FrameworkService } from "./framework.service";
 
 export class DetailCrudHelper<T> {
 
@@ -11,6 +12,7 @@ export class DetailCrudHelper<T> {
   private url: string;
   private router: Router;
   private activateRoute: ActivatedRoute;
+  private framework: FrameworkService;
 
   private createNewInstance: () => T;
   private postAddCallback?: (item: T) => void;
@@ -19,11 +21,12 @@ export class DetailCrudHelper<T> {
   private resetCurrentItemCallback?: () => T;
 
   constructor(
+    framework: FrameworkService,
     createNewInstance: () => T,
     postAddCallback?: (item: T) => void,
     postNewItemCallback?: (item: T) => void,
     postEditItemCallback?: (item: T) => void,
-    resetCurrentItemCallback?: () => T
+    resetCurrentItemCallback?: () => T,
   ) {
     this.createNewInstance = createNewInstance;
     this.postAddCallback = postAddCallback;
@@ -31,6 +34,7 @@ export class DetailCrudHelper<T> {
     this.postEditItemCallback = postEditItemCallback;
     this.currentItem = this.createNewInstance();
     this.resetCurrentItemCallback = resetCurrentItemCallback;
+    this.framework = framework;
   }
 
   private resetCurrentItem(): void {
@@ -93,7 +97,7 @@ export class DetailCrudHelper<T> {
     this.resetCurrentItem();
     this.showDialog(false);
     if (this.url) {
-      this.router.navigate(["./"], { relativeTo: this.activateRoute });
+      this.framework.location.back();
     }
   }
 
