@@ -135,6 +135,10 @@ export class FunctionsService {
     return value == undefined || value == null || value.toString() == "";
   }
 
+  public static isNotEmpty(value): boolean {
+    return !this.isEmpty(value);
+  }
+
   public static formatFieldComma(field: string): string {
     if (!this.isEmpty(field)) {
       return ', ' + field;
@@ -173,5 +177,53 @@ export class FunctionsService {
   @HostListener('window:resize', ['$event'])
   public static getScreenHeightSize(event?) {
     return window.innerHeight;
+  }
+
+  public static toCamelCase(inputString: string): string {
+    let cleanedString = inputString.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    cleanedString = cleanedString.replace(/[^\p{L}\p{N}\s]/gu, "");
+    cleanedString = cleanedString.replace(/\s+/g, " ").trim();
+    return cleanedString.split(' ')
+      .map((word, index) => {
+        if (index === 0) {
+          return word.toLowerCase();
+        }
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      })
+      .join('');
+    }
+
+  public static removeDuplicatesAndModifyDescription(messages: Message[]): Message[] {
+    // Usando um mapa para manter controle das mensagens únicas
+    const uniqueMessagesMap = new Map<string, number>();
+    const uniqueMessages: Message[] = [];
+
+    // Contagem das mensagens repetidas
+    const duplicateCounts: { [key: string]: number } = {};
+
+    messages.forEach((message) => {
+      // Incrementando a contagem das mensagens repetidas
+      if (duplicateCounts[message.description]) {
+        duplicateCounts[message.description]++;
+      } else {
+        duplicateCounts[message.description] = 1;
+      }
+
+      // Adicionando a mensagem única ao mapa
+      if (!uniqueMessagesMap.has(message.description)) {
+        uniqueMessagesMap.set(message.description, uniqueMessages.length);
+        uniqueMessages.push(message);
+      }
+    });
+
+    // Modificando as descrições das mensagens únicas
+    uniqueMessages.forEach((message) => {
+      const count = duplicateCounts[message.description];
+      if (count > 1) {
+        message.description += ` (Total: ${count})`;
+      }
+    });
+
+    return uniqueMessages;
   }
 }
