@@ -75,7 +75,7 @@ export class UtilsService {
   findTextTranslated(alias: string, interpolateParams?: Object): string {
     const currentLang = this.translate.currentLang;
     const translations = this.translate.translations[currentLang] || {};
-    const translationFound = this.findKeyRecursive(translations, alias);
+    const translationFound = this.findKeyByPath(translations, alias);
     let result = translationFound;
     if (result && interpolateParams) {
       result = this.translate.parser.interpolate(result, interpolateParams);
@@ -83,24 +83,23 @@ export class UtilsService {
     return result || alias;
   }
 
-  private findKeyRecursive(obj: any, alias: string): any {
+  private findKeyByPath(obj: any, path: string): any {
     if (obj === null || typeof obj !== "object") {
       return null;
     }
-    if (obj.hasOwnProperty(alias)) {
-      return obj[alias];
+    if (!path.includes('.')) {
+      return obj.hasOwnProperty(path) ? obj[path] : null;
     }
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key) && typeof obj[key] === "object") {
-        const found = this.findKeyRecursive(obj[key], alias);
-        if (found !== null) {
-          return found;
-        }
+        const keys = path.split('.');
+    let current = obj;
+        for (const key of keys) {
+      if (current === null || typeof current !== "object" || !current.hasOwnProperty(key)) {
+        return null;
       }
+      current = current[key];
     }
-    return null;
+    return current;
   }
-
   setNullInNewIds(newsIds: string[], list: any[]) {
     for (let i = 0; i < newsIds?.length; i++) {
       const newId = newsIds[i];
