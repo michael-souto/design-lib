@@ -37,7 +37,7 @@ export class DetailCrudHelper<T> {
     this.framework = framework;
   }
 
-  private resetCurrentItem(): void {
+  public resetCurrentItem(): void {
     if (this.resetCurrentItemCallback) {
       this.currentItem = this.resetCurrentItemCallback();
     } else {
@@ -65,6 +65,17 @@ export class DetailCrudHelper<T> {
     }
   }
 
+  public newItemWithoutUrl(
+    detailList: T[],
+  ): void {
+    this.resetCurrentItem();
+    this.detailList = detailList;
+    this.showDialog(true);
+    if (this.postNewItemCallback) {
+      this.postNewItemCallback(this.currentItem);
+    }
+  }
+
   public editItem(
     item: T,
     url: string,
@@ -80,6 +91,16 @@ export class DetailCrudHelper<T> {
       this.activateRoute = activateRoute;
       router.navigate([url], { relativeTo: activateRoute });
     }
+    if (this.postEditItemCallback) {
+      this.postEditItemCallback(this.currentItem);
+    }
+  }
+
+  public editItemWithoutUrl(
+    item: T,
+  ): void {
+    this.currentItem = item;
+    this.showDialog(true);
     if (this.postEditItemCallback) {
       this.postEditItemCallback(this.currentItem);
     }
