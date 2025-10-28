@@ -109,12 +109,12 @@ export abstract class CrudApiService<T> {
   findByListId(ids: string[], masterId: string = null) {
     if (masterId == null) {
       return this.utilsService.http.post<T[]>(
-        `${this.getAdressAPI()}/find-list-id`,
+        `${this.getAdressAPI()}/by-list-ids`,
         ids
       );
     } else {
       return this.utilsService.http.post<T[]>(
-        `${this.getAdressAPIReplaced(masterId)}/find-list-id`,
+        `${this.getAdressAPIReplaced(masterId)}/by-list-ids`,
         ids
       );
     }

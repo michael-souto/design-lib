@@ -1,22 +1,49 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
+import {
+  filter,
+  map,
+  tap,
+} from "rxjs/operators";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class EventBusService {
-  private events$ = new Subject<Event>();
+  private events$ =
+    new Subject<Event>();
 
   emit(event: Event) {
     this.events$.next(event);
   }
 
-  on(types: string | string[]) {
-    const typeArray = Array.isArray(types) ? types : [types];
+  emitEvent(
+    type: string,
+    payload?: any,
+    callback?: (payload: any) => void,
+    valid?: (payload: any) => void
+  ) {
+    this.events$.next({
+      type,
+      payload,
+      callback,
+      valid,
+    });
+  }
 
-    return this.events$.asObservable().pipe(
-      filter((event) => typeArray.includes(event.type)),
-      map((event) => event),
-    );
+  on(types: string | string[]) {
+    const typeArray = Array.isArray(
+      types
+    )
+      ? types
+      : [types];
+
+    return this.events$
+      .asObservable()
+      .pipe(
+        filter((event) =>
+          typeArray.includes(event.type)
+        ),
+        map((event) => event)
+      );
   }
 }
 
