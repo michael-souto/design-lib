@@ -3,7 +3,8 @@ import { Component } from '@angular/core'; // OnInit não é necessário se ngOn
 @Component({
   selector: 'd-confirm-box',
   templateUrl: './confirm-box.component.html',
-  styleUrls: ['./confirm-box.component.css']
+  styleUrls: ['./confirm-box.component.css'],
+  standalone: false
 })
 export class ConfirmBoxComponent { // Removido "implements OnInit" se ngOnInit não for usado
 

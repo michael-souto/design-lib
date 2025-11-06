@@ -5,7 +5,8 @@ import { MessageType } from '../../models/message-type.model';
 
 @Component({
   selector: 'd-message-window',
-  templateUrl: './message-window.component.html'
+  templateUrl: './message-window.component.html',
+  standalone: false
 })
 export class MessageWindowComponent implements OnInit {
 

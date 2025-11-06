@@ -3,7 +3,8 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 @Component({
   selector: 'd-modal-box',
   templateUrl: './modal-box.component.html',
-  styleUrls: ['./modal-box.component.css']
+  styleUrls: ['./modal-box.component.css'],
+  standalone: false
 })
 export class ModalBoxComponent implements OnInit {
 

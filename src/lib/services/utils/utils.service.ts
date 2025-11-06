@@ -6,7 +6,6 @@ import { TranslateService } from "@ngx-translate/core";
 import { lastValueFrom, of } from "rxjs";
 import { v4 as uuidv4 } from "uuid";
 import { AsyncFunctionQueueService } from "../async-function-queue.service";
-import { EventBusService } from "../event-bus.service";
 
 @Injectable({
   providedIn: "root",
@@ -74,11 +73,11 @@ export class UtilsService {
 
   findTextTranslated(alias: string, interpolateParams?: Object): string {
     const currentLang = this.translate.currentLang;
-    const translations = this.translate.translations[currentLang] || {};
+    const translations = this.translate['translations'][currentLang] || {};
     const translationFound = this.findKeyByPath(translations, alias);
     let result = translationFound;
     if (result && interpolateParams) {
-      result = this.translate.parser.interpolate(result, interpolateParams);
+      result = this.translate['parser'].interpolate(result, interpolateParams);
     }
     return result || alias;
   }
