@@ -2,25 +2,29 @@ import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-export interface EventData {
+export interface Event {
   type?: string;
   name?: string;
-  value?: any;
+  payload?: any;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventBusService {
-  private subject$ = new Subject<EventData>();
+  private subject$ = new Subject<Event>();
 
-  emit(event: EventData) {
+  emit(event: Event) {
     this.subject$.next(event);
   }
 
-  on(eventType: string | string[]): Observable<EventData> {
+  emitEvent(name: string, payload?: any) {
+    this.subject$.next({ name, payload });
+  }
+
+  on(eventType: string | string[]): Observable<Event> {
     return this.subject$.pipe(
-      filter((e: EventData) => {
+      filter((e: Event) => {
         if (Array.isArray(eventType)) {
             return eventType.includes(e.type || '') || eventType.includes(e.name || '');
         }
