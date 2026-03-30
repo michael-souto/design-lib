@@ -1,3 +1,3 @@
 export class GenericEntity {
-  id?: string;
+    id?: any;
 }
